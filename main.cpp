@@ -24,15 +24,18 @@ int moneyCount(int workTime) {
 int main() {
 	
 
-	for (int workIndex = 1; workIndex <= 8; workIndex++) {
+	for (int workIndex = 1; workIndex <= 9; workIndex++) {
 		printf("一般的な賃金体系:%d\n", moneyCount(workIndex));
 		printf("再帰的な賃金体系:%d\n", totalMoney(workIndex));
+
 		if (moneyCount(workIndex) > totalMoney(workIndex)) {
 			printf("一般的な賃金体系の方が大きい\n");
 		}
+
 		else {
-			printf("再帰的な賃金体系の方が大きい");
+			printf("再帰的な賃金体系の方が大きい\n");
 		}
+
 		printf("\n");
 	}
 	return 0;
