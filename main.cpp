@@ -1,42 +1,59 @@
 #include <stdio.h>
+#include<random>
+#include<thread>
 
+ std::random_device rd;
+ std::mt19937 random(rd());
+ //1から６
+ std::uniform_int_distribution<int> dist(1, 6); 
 
-int moneyCountRecursion(int workTime) {
-	
-	if (workTime == 1) {
-		return 100;
-	}
-	return moneyCountRecursion((workTime - 1)) * 2 - 50;
-}
-// 全体のもらえる金額を計算する関数
-int totalMoney(int workTime) {
-	int total = 0;
-	for (int i = 1; i <= workTime; i++) {
-		total += moneyCountRecursion(i);
-	}
-	return total;
-}
+ //サイコロ振る関数
+ typedef int (*DiceDecision)(int *);
 
-int moneyCount(int workTime) {
-	return 1072 * workTime;
-}
+ // サイコロを振る関数
+ int rollDice(int* result) {
+	 *result = dist(random);
+	 return *result;
+ }
+
+ //サイコロゲーム関数
+ void PlayDiceGame(DiceDecision diceDecsion) {
+	 printf("奇数か偶数か当ててください(奇数:1、偶数:2)\n");
+	 int answer;
+     scanf_s("%d", &answer); // 奇数偶数を当ててもらう
+
+     int result;
+
+     printf("正解は.");
+     for (int i = 0; i < 3; ++i) {
+         std::this_thread::sleep_for(std::chrono::seconds(1)); // 1秒待機
+         if (i < 2) {
+             printf(".");
+         }
+         
+     }
+     printf("\n");
+
+     diceDecsion(&result); //コールバック関数
+     printf("出目は %d です。\n", result);
+
+     // 判定
+     bool isOdd = result % 2 != 0; // 奇数かどうかの判定
+     if ((answer == 1 && isOdd) || (answer == 2 && !isOdd)) {
+         printf("正解です\n");
+     }
+     else {
+         printf("不正解です\n");
+     }
+ }
 
 int main() {
-	
+    // 関数ポインタを設定
+    DiceDecision diceDecision = rollDice;
 
-	for (int workIndex = 1; workIndex <= 9; workIndex++) {
-		printf("一般的な賃金体系:%d\n", moneyCount(workIndex));
-		printf("再帰的な賃金体系:%d\n", totalMoney(workIndex));
+    // ゲームを開始
+    PlayDiceGame(diceDecision);
 
-		if (moneyCount(workIndex) > totalMoney(workIndex)) {
-			printf("一般的な賃金体系の方が大きい\n");
-		}
 
-		else {
-			printf("再帰的な賃金体系の方が大きい\n");
-		}
-
-		printf("\n");
-	}
 	return 0;
 }
