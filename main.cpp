@@ -12,7 +12,7 @@ int main() {
     std::unique_ptr<Jock> jock = std::make_unique<Jock>();
 
     /// 100メートル走をする処理
-    printf("人間達が100メートル走をします\n\n");
+    printf("10kmマラソンをします\n\n");
     printf("引きこもり:");
     homebody->Run();
     printf("体育会系:");

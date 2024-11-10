@@ -3,5 +3,5 @@
 
 
 void HomeBody::Run() {
-	printf("3秒でバテてリタイア\n");
+	printf("途中で疲れて止まった\n");
 }
