@@ -129,11 +129,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Homebody.cpp" />
+    <ClCompile Include="Jock.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Number.cpp" />
+    <ClCompile Include="Human.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Number.h" />
+    <ClInclude Include="Homebody.h" />
+    <ClInclude Include="Human.h" />
+    <ClInclude Include="Jock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
