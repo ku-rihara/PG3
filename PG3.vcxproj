@@ -129,15 +129,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Homebody.cpp" />
-    <ClCompile Include="Jock.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Human.cpp" />
+    <ClCompile Include="IShape.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Homebody.h" />
-    <ClInclude Include="Human.h" />
-    <ClInclude Include="Jock.h" />
+    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="IShape.h" />
+    <ClInclude Include="Circle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

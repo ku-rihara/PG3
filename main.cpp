@@ -2,21 +2,28 @@
 #include<memory>
 
 /// class
-#include"Homebody.h"
-#include"Jock.h"
+#include"Circle.h"
+#include"Rectangle.h"
 
 int main() {
-  
     /// 生成
-    std::unique_ptr<HomeBody>homebody=std::make_unique<HomeBody>();
-    std::unique_ptr<Jock> jock = std::make_unique<Jock>();
+    std::unique_ptr<Rectangle>rectangle = std::make_unique<Rectangle>();
+    std::unique_ptr<Circle>circle = std::make_unique<Circle>();
 
-    /// 100メートル走をする処理
-    printf("10kmマラソンをします\n\n");
-    printf("引きこもり:");
-    homebody->Run();
-    printf("体育会系:");
-    jock->Run();
+    ///値セット
+    rectangle->SetHeigth(10);
+    rectangle->SetWidth(5);
+
+    circle->SetRadius(6);
+
+    ///　計算
+    rectangle->Size();
+    circle->Size();
+
+    ///　結果表示
+    rectangle->Draw();
+    circle->Draw();
+
 
     return 0;
 }
