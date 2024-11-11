@@ -9,3 +9,8 @@ Human::Human() {
 Human::~Human() {
  
 }
+
+
+void Human::Run() {
+
+ }

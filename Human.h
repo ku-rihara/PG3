@@ -8,5 +8,5 @@ public:
 	Human();
 	virtual ~Human();
 
-	virtual void Run()=0;
+	virtual void Run();
 };
