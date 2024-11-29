@@ -1,48 +1,43 @@
 #include <stdio.h>
-#include<memory>
-#include<list>
-/// class
+#include<vector>
+#include<string>
+#include <fstream>
+#include<algorithm>
+
+// ソートするための番号を取得
+int getNumber(const std::string& ID) {
+	size_t pos = ID.find('g');
+return	std::stoi(ID.substr(pos + 1, 4));
+}
 
 int main() {
-	// 1970年
-	std::list<const char*>yamanotesen{
-		"Tokyo","Kanda","Akihabara","Okachimachi","Ueno","Uguisudani",
-		"Nippori","Tabata","Komagome","Sugamo","Otsuka",
-		"Ikebukuro", "Mejiro","Takadanobaba","Shin-Okubo","Shinjuku",
-		"Yoyogi","Harajuku","Shibuya","Ebisu","Meguro","Gotanda",
-		"Osaki","Shinagawa","Tamachi","Hamamatsucho","Shimbashi", "Yurakucho"
-	};
+	
+	const std::string fileName = "PG3_2024_03_02.txt";
+	std::vector<std::string>studentID;
 
-	printf("******************1970年の山手線******************");
-	for (std::list<const char*>::iterator itr = yamanotesen.begin(); itr != yamanotesen.end(); ++itr) {/// 駅を回す
-		printf("\n%s", *itr);
+	//　ファイルを開く
+	std::ifstream file(fileName);
+	if (!file.is_open()) {// 開けなかったら
+		return 1;
 	}
 
-	/// 2019
-	for (std::list<const char*>::iterator itr = yamanotesen.begin(); itr != yamanotesen.end(); ++itr) {///西日暮里の追加
-		if (*itr == "Tabata") {
-			itr = yamanotesen.insert(itr, "Nishi-Nippori");
-			itr++;
+	std::string line;
+	// ,区切りで読む
+	while (std::getline(file, line, ',')) {
+		if (!line.empty()) {
+			studentID.push_back(line);//vectorに格納
 		}
 	}
-	printf("\n******************2019年の山手線******************");
-	for (std::list<const char*>::iterator itr = yamanotesen.begin(); itr != yamanotesen.end(); ++itr) {/// 駅を回す
-		printf("\n%s", *itr);
+	file.close();// ファイル閉じる
+
+	// ソート
+	std::sort(studentID.begin(), studentID.end(), [](const std::string& a, const std::string& b) {
+		return getNumber(a)< getNumber(b);
+		});
+
+	// ソート結果を出力
+	for (const auto& id : studentID) {
+		printf("%s\n", id.c_str());
 	}
-
-	/// 2022
-	for (std::list<const char*>::iterator itr = yamanotesen.begin(); itr != yamanotesen.end(); ++itr) {///高輪ゲートウェイの追加
-		if (*itr == "Tamachi") {
-			itr = yamanotesen.insert(itr, "Takanawa Gateway");
-			itr++;
-		}
-	}
-
-	printf("\n******************2022年の山手線******************");
-	for (std::list<const char*>::iterator itr = yamanotesen.begin(); itr != yamanotesen.end(); ++itr) {/// 駅を回す
-		printf("\n%s", *itr);
-	}
-
-
 	return 0;
 }
