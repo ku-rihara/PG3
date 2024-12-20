@@ -1,43 +1,37 @@
 #include <stdio.h>
-#include<vector>
-#include<string>
-#include <fstream>
-#include<algorithm>
+#include <thread>
+#include <array>
+#include <string>
+#include <mutex>
 
-// ソートするための番号を取得
-int getNumber(const std::string& ID) {
-	size_t pos = ID.find('g');
-return	std::stoi(ID.substr(pos + 1, 4));
+
+std::mutex mtx;
+std::condition_variable cv;
+int currentId = 0;
+
+// 文字出力する関数
+void threadMessage(const std::string& message, int id) {
+    std::unique_lock<std::mutex> lock(mtx);
+    cv.wait(lock, [id] { return id == currentId; });
+
+    printf("%s\n", message.c_str());
+
+    ++currentId;
+    cv.notify_all();
 }
 
 int main() {
-	
-	const std::string fileName = "PG3_2024_03_02.txt";
-	std::vector<std::string>studentID;
+    std::array<std::thread, 3> th;
 
-	//　ファイルを開く
-	std::ifstream file(fileName);
-	if (!file.is_open()) {// 開けなかったら
-		return 1;
-	}
+    // 並行処理
+    for (uint32_t i = 0; i < th.size(); ++i) {
+        th[i] = std::thread(threadMessage, "thread" + std::to_string(i + 1), i);
+    }
 
-	std::string line;
-	// ,区切りで読む
-	while (std::getline(file, line, ',')) {
-		if (!line.empty()) {
-			studentID.push_back(line);//vectorに格納
-		}
-	}
-	file.close();// ファイル閉じる
+    // スレッドの完了を待機
+    for (uint32_t i = 0; i < th.size(); ++i) {
+        th[i].join();
+    }
 
-	// ソート
-	std::sort(studentID.begin(), studentID.end(), [](const std::string& a, const std::string& b) {
-		return getNumber(a)< getNumber(b);
-		});
-
-	// ソート結果を出力
-	for (const auto& id : studentID) {
-		printf("%s\n", id.c_str());
-	}
-	return 0;
+    return 0;
 }
