@@ -1,33 +1,73 @@
-#include <stdio.h>
-#include<iostream>
-//std
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <condition_variable>
 #include <chrono>
-#include<string>
-//class
-#include"Enemy.h"
+#include <atomic>
+#include <cstdio>
+
+const int mapxMax = 70;
+const int mapyMax = 30;
+int map[mapyMax][mapxMax];
 
 int main() {
-   
-    std::string a(100000,'a');
-   
-    // コピー
-    auto startCopy = std::chrono::high_resolution_clock::now();
-    std::string copy = a;
-    auto endCopy = std::chrono::high_resolution_clock::now();
+    std::mutex mutex;
+    std::condition_variable condition;
+    std::queue<int> q;
+    std::atomic<bool> exit(false);
 
-    // 移動
-    auto startMove = std::chrono::high_resolution_clock::now();
-    std::string move = std::move(a);
-    auto endMove = std::chrono::high_resolution_clock::now();
-  
+    // バックグラウンドスレッド
+    std::thread th([&]() {
+        while (!exit) {
+            std::this_thread::sleep_for(std::chrono::microseconds(4000));
 
-    std::cout << "コピーの時間: "
-        << std::chrono::duration_cast<std::chrono::microseconds>(endCopy - startCopy).count()
-        << " μs\n";
+            // ファイル読み込み
+            FILE* fp = nullptr;
+            if (fopen_s(&fp, "mapSampleGame.csv", "rt") != 0) {
+                std::cerr << "Failed to open file.\n";
+                return;
+            }
 
-    std::cout << "移動の時間: "
-        << std::chrono::duration_cast<std::chrono::microseconds>(endMove - startMove).count()
-        << " μs\n";
+            int numRects = 0;
+            while (numRects < mapxMax * mapyMax && fscanf_s(fp, "%d,", &map[numRects / mapxMax][numRects % mapxMax]) != EOF) {
+                ++numRects;
+            }
+            fclose(fp);
+
+            // ファイル読み込み後、メインスレッドに通知
+            condition.notify_all();
+        }
+        });
+
+    // メインスレッドでキューにデータをプッシュ
+    for (int i = 0; i < 1; ++i) {
+        std::lock_guard<std::mutex> lock(mutex);
+        q.push(i);  // キューにデータをプッシュ
+        condition.notify_one(); // 通知を送る
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+
+    // メインスレッドでキューを表示
+    while (!q.empty()) {
+        std::lock_guard<std::mutex> lock(mutex);
+        std::cout << "Queue data: " << q.front() << std::endl;
+        q.pop();
+    }
+
+    // マップの表示（読み込んだデータを表示）
+    std::cout << "\nMap data:\n";
+    for (int y = 0; y < mapyMax; ++y) {
+        for (int x = 0; x < mapxMax; ++x) {
+            std::cout << map[y][x] << " ";
+        }
+        std::cout << "\n";
+    }
+
+    exit = true;
+    condition.notify_all();
+
+    th.join(); // スレッド終了を待つ
 
     return 0;
 }
