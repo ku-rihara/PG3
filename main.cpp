@@ -5,8 +5,7 @@ template <typename T>
 T Min(T a, T b) {
 	if (a > b) {
 		return static_cast<T>(b);
-	}
-	else {
+	} else {
 		return static_cast<T>(a);
 	}
 }
@@ -22,8 +21,7 @@ T1  Min(T1 a, T2 b) {
 
 	if (a > b) {
 		return static_cast<T1>(b);
-	}
-	else {
+	} else {
 		return static_cast<T1>(a);
 	}
 }
